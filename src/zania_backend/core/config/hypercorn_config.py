@@ -21,5 +21,5 @@ class HypercornConfig(Config):
 
 	workers = settings.server.HTTP_WORKERS  # type: ignore
 	use_reloader = settings.app.DEBUG
-	accesslog = None
-	errorlog = None
+	# accesslog = None
+	# errorlog = None

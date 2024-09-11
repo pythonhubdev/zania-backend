@@ -11,7 +11,7 @@ class APIResponse(JSONResponse):
 		self,
 		status: StatusEnum,
 		message: str,
-		data: dict[str, Any] | None = None,
+		data: dict[str, Any] | list[dict[str, Any]] | None = None,
 		status_code: int = 200,
 		headers: dict[str, Any] | None = None,
 	):
@@ -29,5 +29,5 @@ class ResponseUtils:
 		return APIResponse(status=StatusEnum.ERROR, message=message, status_code=status_code)
 
 	@staticmethod
-	def create_success_response(message: str, data: dict[str, Any]  | None = None) -> APIResponse:
+	def create_success_response(message: str, data: dict[str, Any] | list[dict[str, Any]] | None = None) -> APIResponse:
 		return APIResponse(status=StatusEnum.SUCCESS, message=message, data=data)
