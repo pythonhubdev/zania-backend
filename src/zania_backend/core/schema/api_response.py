@@ -27,3 +27,7 @@ class ResponseUtils:
 	@staticmethod
 	def create_error_response(status_code: int, message: str) -> APIResponse:
 		return APIResponse(status=StatusEnum.ERROR, message=message, status_code=status_code)
+
+	@staticmethod
+	def create_success_response(message: str, data: dict[str, Any]  | None = None) -> APIResponse:
+		return APIResponse(status=StatusEnum.SUCCESS, message=message, data=data)

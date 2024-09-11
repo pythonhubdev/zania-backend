@@ -8,6 +8,7 @@ from fastapi_msgspec.responses import MsgSpecJSONResponse  # type: ignore
 from fastapi_msgspec.routing import MsgSpecRoute  # type: ignore
 
 from zania_backend.core import Helper, configure_logging
+from zania_backend.core.schema.api_response import APIResponse, ResponseUtils
 from zania_backend.middlewares.logging_middleware import LoggingMiddleware
 from zania_backend.web.api.router import api_router
 
@@ -51,6 +52,12 @@ def construct_app() -> FastAPI:
 	_app.router.route_class = MsgSpecRoute
 
 	configure_logging()
+
+	@_app.get("/", response_class=APIResponse)
+	def index() -> APIResponse:
+		return ResponseUtils.create_success_response(
+			message="Welcome to Zania Backend API",
+		)
 
 	return _app
 
