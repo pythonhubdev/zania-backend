@@ -18,7 +18,8 @@ class CaseConverter:
 
 	@classmethod
 	def camelize(
-		cls, data: str | list[Any] | tuple[Any] | Mapping[str, Any]
+		cls,
+		data: str | list[Any] | tuple[Any] | Mapping[str, Any],
 	) -> str | list[Any] | tuple[Any] | Mapping[str, Any]:
 		"""
 		Convert a string, dict, or list of dicts to camel case.
@@ -34,8 +35,8 @@ class CaseConverter:
 		"""
 		if isinstance(data, str):
 			return cls._camelize_string(data)
-		elif isinstance(data, (list | tuple)):
-			return type(data)(cls.camelize(item) for item in data)
+		elif isinstance(data, (list | tuple)):  # noqa: RET505
+			return type(data)(cls.camelize(item) for item in data)  # type: ignore
 		elif isinstance(data, Mapping):
 			return {cls._camelize_string(k) if isinstance(k, str) else k: cls.camelize(v) for k, v in data.items()}
 		else:
@@ -49,7 +50,8 @@ class CaseConverter:
 
 	@classmethod
 	def decamelize(
-		cls, data: str | list[Any] | tuple[Any] | Mapping[str, Any]
+		cls,
+		data: str | list[Any] | tuple[Any] | Mapping[str, Any],
 	) -> str | list[Any] | tuple[Any] | Mapping[str, Any]:
 		"""
 		Convert a camelCase string, dict, or list of dicts to snake_case.
@@ -65,8 +67,8 @@ class CaseConverter:
 		"""
 		if isinstance(data, str):
 			return cls._decamelize_string(data)
-		elif isinstance(data, (list | tuple)):
-			return type(data)(cls.decamelize(item) for item in data)
+		elif isinstance(data, (list | tuple)):  # noqa: RET505
+			return type(data)(cls.decamelize(item) for item in data)  # type: ignore
 		elif isinstance(data, Mapping):
 			return {cls._decamelize_string(k) if isinstance(k, str) else k: cls.decamelize(v) for k, v in data.items()}
 		else:

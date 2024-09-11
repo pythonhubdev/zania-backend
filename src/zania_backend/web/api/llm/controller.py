@@ -1,5 +1,5 @@
+from fastapi import UploadFile
 from starlette import status
-from starlette.datastructures import UploadFile
 
 from zania_backend.core.schema.api_response import APIResponse, ResponseUtils
 from zania_backend.services.langchain_service import LangchainService
@@ -10,7 +10,7 @@ class LLMController:
 	@staticmethod
 	async def query(
 		document: UploadFile,
-		questions_document: UploadFile,
+		questions_document: UploadFile | None,
 		data: QAndASchema,
 	) -> APIResponse:
 		try:
@@ -43,3 +43,7 @@ class LLMController:
 					message="Did not find openai_api_key! Please provide the API key manually or set in the env with "
 					"`OPENAI_API_KEY`.",
 				)
+			return ResponseUtils.create_error_response(
+				status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+				message=str(value_error),
+			)

@@ -15,6 +15,7 @@ async def query(
 	data: QAndASchema,
 	questions_document: Annotated[UploadFile, File()] | None = None,
 ) -> APIResponse:
+	assert document is not None
 	return await LLMController.query(
 		data=data,
 		document=document,

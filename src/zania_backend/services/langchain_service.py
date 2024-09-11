@@ -3,7 +3,7 @@ import tempfile
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-import aiofiles
+import aiofiles  # type: ignore
 from fastapi import UploadFile
 from langchain.chains.question_answering import load_qa_chain
 from langchain_community.document_loaders import JSONLoader, PyMuPDFLoader
@@ -21,11 +21,11 @@ if TYPE_CHECKING:
 
 
 class LangchainService(ServiceRepository):
-	def __init__(self):
-		self.document_store: VST | None = None
+	def __init__(self) -> None:
+		self.document_store: VST | None = None  # type: ignore
 		self.qa_chain: BaseCombineDocumentsChain | None = None
 
-	async def query(self, question: str):
+	async def query(self, question: str) -> dict[str, str]:
 		if not self.document_store or not self.qa_chain:
 			raise ValueError(ErrorMessages.DOCUMENT_NOT_LOADED)
 
@@ -34,11 +34,13 @@ class LangchainService(ServiceRepository):
 		return await self.qa_chain.arun(input_documents=docs, question=question)
 
 	async def load(self, resource: UploadFile):
+		assert resource.filename is not None
 		with tempfile.NamedTemporaryFile(delete=False) as temp_file:
 			content = await resource.read()
 			temp_file.write(content)
 			temp_file_path = temp_file.name
 		try:
+			loader: JSONLoader | PyMuPDFLoader
 			if resource.filename.endswith(".pdf"):
 				loader = PyMuPDFLoader(temp_file_path)
 				documents = loader.load()
@@ -70,6 +72,7 @@ class LangchainService(ServiceRepository):
 			temp_file_path = temp_file.name
 
 		try:
+			assert questions_file.filename is not None
 			if questions_file.filename.endswith(".json"):
 				with aiofiles.open(temp_file_path) as file:
 					questions = json.load(file)
