@@ -25,7 +25,7 @@ class LangchainService(ServiceRepository):
 		self.document_store: VST | None = None  # type: ignore
 		self.qa_chain: BaseCombineDocumentsChain | None = None
 
-	async def query(self, question: str) -> dict[str, str]:
+	async def query(self, question: str) -> str:
 		if not self.document_store or not self.qa_chain:
 			raise ValueError(ErrorMessages.DOCUMENT_NOT_LOADED)
 
@@ -45,7 +45,7 @@ class LangchainService(ServiceRepository):
 				loader = PyMuPDFLoader(temp_file_path)
 				documents = loader.load()
 			elif resource.filename.endswith(".json"):
-				loader = JSONLoader(temp_file_path, jq_schema=".[]")
+				loader = JSONLoader(temp_file_path, jq_schema=".[]", text_content=False)
 				documents = loader.load()
 			else:
 				raise ValueError(ErrorMessages.UNSUPPORTED_FILE_TYPES)
@@ -74,8 +74,9 @@ class LangchainService(ServiceRepository):
 		try:
 			assert questions_file.filename is not None
 			if questions_file.filename.endswith(".json"):
-				with aiofiles.open(temp_file_path) as file:
-					questions = json.load(file)
+				async with aiofiles.open(temp_file_path) as file:
+					content = await file.read()
+					questions = json.loads(content)
 			else:
 				raise ValueError(ErrorMessages.UNSUPPORTED_FILE_TYPES_JSON)
 

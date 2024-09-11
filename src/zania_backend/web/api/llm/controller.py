@@ -11,7 +11,7 @@ class LLMController:
 	async def query(
 		document: UploadFile,
 		questions_document: UploadFile | None,
-		data: QAndASchema,
+		data: QAndASchema | None,
 	) -> APIResponse:
 		try:
 			service = LangchainService()
@@ -19,13 +19,13 @@ class LLMController:
 			questions = []
 			if questions_document:
 				questions = await service.process_questions(questions_document)
-			elif data.questions:
+			elif data and data.questions:
 				questions = data.questions
 
 			results = {}
 			for question in questions:
 				answer = await service.query(question)
-				results[question] = answer
+				results[question] = answer.strip()
 
 			return ResponseUtils.create_success_response(
 				message="Successfully queried LLM model",
