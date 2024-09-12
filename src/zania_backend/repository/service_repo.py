@@ -14,10 +14,10 @@ class ServiceRepository(ABC):
 		"""
 
 	@abstractmethod
-	async def query(self, query: str):
+	async def query(self, question: str) -> str:
 		"""
 		Query the service based on a specific resource that was loaded.
 
-		:param query:
+		:param question:
 		:return:
 		"""
