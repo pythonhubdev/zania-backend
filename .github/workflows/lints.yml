@@ -1,0 +1,27 @@
+name: 🧹 lints
+
+on:
+    pull_request:
+        branches: [master, main]
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    lints:
+        if: github.event.pull_request.draft == false
+        runs-on: ubuntu-latest
+        steps:
+        -   uses: actions/checkout@v4
+        -   name: Install uv
+            uses: astral-sh/setup-uv@v2
+        -   name: Install deps
+            run: uv sync --frozen
+
+        -   name: 🚨 pre-commit
+            uses: pre-commit/action@v3.0.0
+
+
+        -   name: 🩺 Run linter
+            run: uv run ruff check ./src
