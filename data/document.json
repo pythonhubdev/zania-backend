@@ -1,0 +1,24 @@
+{
+  "content": [
+    {
+      "title": "Geography",
+      "text": "France is a country in Western Europe. The capital of France is Paris."
+    },
+    {
+      "title": "Literature",
+      "text": "George Orwell wrote the novel '1984', which was published in 1949."
+    },
+    {
+      "title": "Biology",
+      "text": "The blue whale is the largest mammal on Earth."
+    },
+    {
+      "title": "History",
+      "text": "The American Civil War ended in 1865."
+    },
+    {
+      "title": "Physics",
+      "text": "The speed of light is approximately 299,792 kilometers per second."
+    }
+  ]
+}
