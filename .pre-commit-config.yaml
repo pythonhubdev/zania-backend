@@ -45,7 +45,7 @@ repos:
     hooks:
     -   id: mypy
         name: Validate types with MyPy
-        entry: rye run mypy
+        entry: uv run mypy
         language: system
         types: [python]
         pass_filenames: false

@@ -11,7 +11,17 @@ dependencies = [
     "loguru>=0.7.2",
     "scalar-fastapi>=1.0.3",
     "python-dotenv>=1.0.1",
-    "fastapi-csrf-protect>=0.3.4"
+    "fastapi-csrf-protect>=0.3.4",
+    "langchain>=0.2.16",
+    "langchain-community>=0.2.16",
+    "pypdf>=4.3.1",
+    "pymupdf>=1.24.10",
+    "python-multipart>=0.0.9",
+    "langchain-openai>=0.1.23",
+    "faiss-cpu>=1.8.0.post1",
+    "aiofiles>=24.1.0",
+    "jq>=1.8.0",
+    "langchain-cli>=0.0.30"
 ]
 description = "A FastAPI-based Question-Answering API leveraging Langchain and large language models"
 name = "zania-backend"
@@ -30,6 +40,7 @@ dev-dependencies = [
     "pytest>=8.3.3",
     "pytest-cov>=5.0.0",
     "pytest-rich>=0.1.1",
-    "ruff>=0.6.4"
+    "ruff>=0.6.4",
+    "pyright>=1.1.380"
 ]
 package = true

@@ -5,11 +5,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.models import Server
 from fastapi.staticfiles import StaticFiles
 from fastapi_msgspec.responses import MsgSpecJSONResponse  # type: ignore
-from fastapi_msgspec.routing import MsgSpecRoute  # type: ignore
 
 from zania_backend.core import Helper, configure_logging
 from zania_backend.core.schema.api_response import APIResponse, ResponseUtils
-from zania_backend.middlewares.logging_middleware import LoggingMiddleware
+from zania_backend.middlewares import LoggingMiddleware
 from zania_backend.web.api.router import api_router
 
 
@@ -49,7 +48,6 @@ def construct_app() -> FastAPI:
 		StaticFiles(directory=Helper.module_to_os_path("zania_backend") / "static"),
 		name="static",
 	)
-	_app.router.route_class = MsgSpecRoute
 
 	configure_logging()
 

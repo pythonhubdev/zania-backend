@@ -37,6 +37,3 @@ class BaseResponseSchema(BaseSchema, Generic[T]):
 	status: StatusEnum
 	message: str
 	data: T | None = None
-
-
-class BaseRequestSchema(BaseSchema): ...
