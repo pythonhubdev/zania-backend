@@ -1,13 +1,14 @@
 import json
 import tempfile
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import aiofiles  # type: ignore
 from fastapi import UploadFile
-from langchain.chains.question_answering import load_qa_chain
+from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_community.document_loaders import JSONLoader, PyMuPDFLoader
 from langchain_community.vectorstores import FAISS
+from langchain_core.prompts import PromptTemplate
 from langchain_openai import OpenAI, OpenAIEmbeddings
 from langchain_text_splitters import CharacterTextSplitter
 
@@ -16,14 +17,14 @@ from zania_backend.core.utils.logging import logger
 from zania_backend.repository import ServiceRepository
 
 if TYPE_CHECKING:
-	from langchain.chains.combine_documents.base import BaseCombineDocumentsChain
+	from langchain_core.runnables import Runnable
 	from langchain_core.vectorstores import VST
 
 
 class LangchainService(ServiceRepository):
 	def __init__(self) -> None:
 		self.document_store: VST | None = None  # type: ignore
-		self.qa_chain: BaseCombineDocumentsChain | None = None
+		self.qa_chain: Runnable[dict[str, Any], Any] | None = None
 
 	async def query(self, question: str) -> str:
 		if not self.document_store or not self.qa_chain:
@@ -31,7 +32,7 @@ class LangchainService(ServiceRepository):
 
 		docs = self.document_store.similarity_search(question)
 
-		return await self.qa_chain.arun(input_documents=docs, question=question)
+		return await self.qa_chain.ainvoke({"context": docs, "question": question})
 
 	async def load(self, resource: UploadFile):
 		assert resource.filename is not None
@@ -56,7 +57,14 @@ class LangchainService(ServiceRepository):
 			embeddings = OpenAIEmbeddings()
 			self.document_store = FAISS.from_documents(texts, embeddings)
 
-			self.qa_chain = load_qa_chain(OpenAI(), chain_type="stuff")
+			llm = OpenAI()
+			prompt = PromptTemplate.from_template("""
+			Answer the user's question: {question}
+			Only provide an answer based on the context below.
+			Please provide a clear and concise answer with no minimum 50 to 100 words.
+			{context}
+			""")
+			self.qa_chain = create_stuff_documents_chain(llm, prompt)
 
 		except Exception as exception:
 			logger.error(f"Exception occurred while loading document: {exception}", exc_info=True)

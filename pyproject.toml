@@ -20,7 +20,8 @@ dependencies = [
     "langchain-openai>=0.1.23",
     "faiss-cpu>=1.8.0.post1",
     "aiofiles>=24.1.0",
-    "jq>=1.8.0"
+    "jq>=1.8.0",
+    "langchain-cli>=0.0.30"
 ]
 description = "A FastAPI-based Question-Answering API leveraging Langchain and large language models"
 name = "zania-backend"
